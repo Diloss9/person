@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+
+        body {
+          margin: 0; /* Remove default body margins */
+          font-family: sans-serif; /* Set a basic font family */
+        }
+
+        .background-overlay {
+          position: fixed; /* Fix the overlay to the viewport */
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%; /* Cover the entire viewport */
+          background-image: url('../images/logo.jpg'); /* Set background image */
+          background-size: cover; /* Cover the entire area */
+          background-position: center; /* Center the image */
+          background-repeat: no-repeat; /* Prevent image repetition */
+          opacity: 0.1; /* Set desired opacity (0-1 for transparency) */
+          z-index: -1; /* Place the overlay behind the content */
+        }
+
+        .container {
+          position: relative; /* Enable relative positioning */
+          margin: 0 auto; /* Center the container horizontally */
+          max-width: 80%; /* Set a maximum width for responsiveness */
+          padding: 20px; /* Add some padding around the content */
+        }
+
+                table, th, td {
+                  border: 1px solid black;
+                }
+
+        .myDiv {
+          border: 5px outset red;
+          background-color: beige;
+          text-align: center;
+          margin: 2% 20% 2% 20%;
+        }
+
+        <style>
+    table {
+        width: 100%; /* Make the table span the full width of its container */
+        border-collapse: collapse; /* Collapse borders to create a seamless appearance */
+        margin: 20px auto; /* Add some spacing around the table */
+    }
+
+    th, td {
+        padding: 10px; /* Add padding to cells for spacing */
+        border: 1px solid #ccc; /* Add a thin gray border to each cell */
+        text-align: left; /* Align text to the left */
+    }
+
+    th {
+        font-weight: bold; /* Make header text bold */
+    }
+
+    tbody tr:nth-child(odd) {
+
+    }
+    </style>
+
+    </style>
+    <title>Personen-Datenbank</title>
+</head>
+<body>
+<div class="background-overlay"></div>
+<div class="container"></div>
+
+<center>
+    <h1>Personen-Datenbank</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>E-Mail</th>
+            <th>Land</th>
+            <th>Geburtstag</th>
+            <th>Gehalt</th>
+            <th>Bonus</th>
+            <th>Bearbeiten</th>
+            <th>Löschen</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="person : ${data}">
+            <td th:text="${person.id}">ID</td>
+            <td class="first_name" th:text="${person.first_name}">Vorname</td>
+            <td class="last_name" th:text="${person.last_name}">Nachname</td>
+            <td class="email" th:text="${person.email}">E-Mail</td>
+            <td class="country" th:text="${person.country}">Land</td>
+            <td class="birthday" th:text="${person.birthday}">Geburtstag</td>
+            <td class="salary" th:text="${person.salary}">Gehalt</td>
+            <td class="bonus" th:text="${person.bonus}">Bonus</td>
+            <td>
+                <form method="get" th:action="@{/editPerson/{id}(id=${person.id})}">
+                    <button class="edit-button" data-person-id="{{ person.id }}">Bearbeiten</button>
+                </form>
+            </td>
+            </td>
+            <td>
+                <form method="post" th:action="@{/deletePerson(id=${person.id})}">
+                    <button type="submit">Löschen</button>
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="myDiv">
+        <form action="/addPerson" method="post">
+            Vorname: <br><input name="firstName" required type="text"><br>
+            Nachname: <br><input name="lastName" required type="text"><br>
+            E-Mail: <br><input name="email" required type="email"><br>
+            Land: <br><input name="country" type="text"><br>
+            Geburtstag: <br><input name="birthday" type="date"><br>
+            Gehalt: <br><input name="salary" required type="number"><br>
+            Bonus: <br><input name="bonus" type="number"><br>
+            <input type="submit" value="Person hinzufügen">
+        </form>
+    </div>
+
+    <h2>Alle Einträge anzeigen</h2>
+    <form action="/alleAnzeigen" method="post">
+        <input type="submit" value="Alle Einträge anzeigen">
+    </form>
+
+    <br>
+
+    <hr>
+
+    <h2>Eintrag löschen</h2>
+
+    <form action="/deletePerson" method="post">
+        ID der zu löschenden Person eingeben: <br><input name="id" required type="number"><br>
+        <input type="submit" value="Person löschen">
+    </form>
+
+    <br>
+    <hr>
+
+    <section id="eintrag-bearbeiten">
+        <h2>Eintrag bearbeiten</h2>
+    </section>
+    <p>
+
+    <form action="/editPerson" method="post">
+
+        Neuer Wert eingeben: <br> <input name="filterText" required type="text"><br>
+
+        ID des Eintrags: <br> <input ** **id="id" name="filterId" required type="text"><br>
+        <br>
+
+        <div class="radio-buttons">
+            <label for="updateFirstName">
+                <input checked id="updateFirstName" name="updateOption" type="radio" value="firstName">
+                Vorname aktualisieren
+            </label>
+
+            <label for="updateLastName">
+                <input id="updateLastName" name="updateOption" type="radio" value="lastName">
+                Nachname aktualisieren
+            </label>
+
+            <label for="updateCountry">
+                <input id="updateCountry" name="updateOption" type="radio" value="country">
+                Land aktualisieren
+            </label>
+
+            <label for="updateEmail">
+                <input id="updateEmail" name="updateOption" required type="radio" typeof="email" value="email">
+                E-Mail aktualisieren
+            </label>
+
+            <label for="updateBirthday">
+                <input id="updateBirthday" name="updateOption" type="radio" value="birthday">
+                Geburtstag aktualisieren
+            </label>
+
+            <label for="updateSalary">
+                <input id="updateSalary" name="updateOption" required type="radio" typeof="number" value="salary">
+                Gehalt aktualisieren
+            </label>
+
+            <label for="updateBonus">
+                <input id="updateBonus" name="updateOption" required type="radio" typeof="number" value="bonus">
+                Bonus aktualisieren
+            </label>
+
+        </div>
+
+        <br>
+
+        <input type="submit" value="Person aktualisieren">
+    </form>
+
+    <br>
+    <hr>
+
+    <h2>Sortieren</h2>
+    <p>
+
+    <form action="/sortieren" method="post">
+
+        Nach Vorname, Nachname oder Land <br>
+        <select name="sortOption">
+            <option value="firstName">Vorname</option>
+            <option value="lastName">Nachname</option>
+            <option value="country">Land</option>
+            <option value="email">E-Mail</option>
+            <option value="birthday">Geburtstag</option>
+            <option value="salary">Gehalt</option>
+            <option value="bonus">Bonus</option>
+        </select>
+
+        <!-- Radio button ASC und DESC -->
+        <br>
+
+        <div class="radio-buttons">
+            <label for="asc">
+                <input checked id="asc" name="sortieroption" type="radio" value="asc">
+                Sortieren Absteigend
+            </label>
+
+            <label for="desc">
+                <input id="desc" name="sortieroption" type="radio" value="desc">
+                Sortieren Aufsteigend
+            </label>
+        </div>
+
+        <br>
+
+        <input type="submit" value="Tabelle sortieren">
+    </form>
+
+    <br>
+    <hr>
+
+    <h2>Filtern</h2>
+    <p>
+
+    <form action="/filter" method="post">
+        Text oder Zahl eingeben nach dem gefiltert werden soll: <br><input name="filterText" required type="text"><br>
+        <input type="submit" value="Filtern nach">
+
+        <br>
+
+        <div>
+            <input checked id="vorname" name="filterOption" type="radio" value="vorname"/>
+            <label for="vorname">Vorname</label>
+            <input checked id="nachname" name="filterOption" type="radio" value="nachname"/>
+            <label for="nachname">Nachname</label>
+            <input checked id="land" name="filterOption" type="radio" value="land"/>
+            <label for="land">Land</label>
+            <input checked id="email" name="filterOption" type="radio" value="email"/>
+            <label for="vorname">E-Mail</label>
+            <input checked id="birthday" name="filterOption" type="radio" value="birthday"/>
+            <label for="vorname">Geburtstag</label>
+            <input checked id="salary" name="filterOption" type="radio" value="salary"/>
+            <label for="vorname">Gehalt</label>
+            <input checked id="bonus" name="filterOption" type="radio" value="bonus"/>
+            <label for="vorname">Bonus</label>
+        </div>
+
+    </form>
+
+    <br>
+
+
+    <style>
+        tr:hover {
+          background-color: #ff0000; /* Hellgrauer Hintergrund beim Hovern */
+        }
+    </style>
+
+    <p></p>
+</center>
+<script>
+    const editButtons = document.querySelectorAll('.edit-button');
+    const editForm = document.getElementById('editForm');
+
+    editButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        const personId = event.target.dataset.personId;
+        populateEditForm(personId);
+      });
+    });
+
+    function populateEditForm(personId) {
+      fetch(`/editPerson/${personId}`) // Make a GET request to retrieve person data
+        .then(response => response.json())
+        .then(data => {
+          // Access form elements by their ID
+          editForm.personId.value = data.id;
+          // Set the value for the selected update option radio button (optional)
+          // ... (logic to set radio button based on data)
+
+          // Make the edit form visible (optional, adjust CSS for visibility)
+          editForm.style.display = "block";
+        })
+        .catch(error => console.error(error));
+    }
+</script>
+</body>
+</html>
